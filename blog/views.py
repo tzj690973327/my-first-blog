@@ -2,6 +2,14 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from .models import Post
 from .forms import PostForm
+from rest_framework import viewsets
+from .serializers import PostSerializer
+from django.http import HttpResponse
+
+def js_test(request):
+    return HttpResponse("This is a test view for js_test.")
+
+
 
 def post_list(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
@@ -37,3 +45,8 @@ def post_edit(request, pk):
     else:
         form = PostForm(instance=post)
     return render(request, 'blog/post_edit.html', {'form': form})
+
+
+class BlogImages(viewsets.ModelViewSet):
+    queryset=Post.objects.all()
+    serializer_class=PostSerializer
